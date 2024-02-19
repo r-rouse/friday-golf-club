@@ -1,4 +1,5 @@
-const Player = require('../models/player')
+const { Player, ScoreCard, Score, Hole, Course } = require('../models'); // adjust the path as necessary
+
 
 
 const GetAllPlayer = async (req, res) => {
@@ -9,6 +10,32 @@ const GetAllPlayer = async (req, res) => {
         throw error
     }
 }
+const getAllPlayersWithScorecards = async (req, res) => {
+    try {
+      const players = await Player.findAll({
+        // Include Scorecards and any nested associations as needed
+        include: [{
+          model: ScoreCard,
+          as: 'scorecards', // Ensure this matches the alias used in your association definition
+          include: [{
+            model: Course, // Optional: Include Course if Scorecard belongs to a Course
+            as: 'course', // Again, ensure this matches the alias used in your association definition
+          }, {
+            model: Score, // Optional: Include Scores if detailed scores per hole are needed
+            as: 'scores', // Alias used in association definition
+            include: [{
+              model: Hole, // Optional: Include Hole details for each Score
+              as: 'hole', // Alias used in association definition
+            }]
+          }]
+        }]
+      });
+      res.status(200).json(players);
+    } catch (error) {
+      console.error('Error fetching players with scorecards:', error);
+      res.status(500).send({ message: error.message });
+    }
+  };
 const GetPlayerById = async (req, res) => {
     try {
       let playerId = parseInt(req.params.id);
@@ -33,7 +60,7 @@ const CreatePlayer = async (req, res) => {
   const UpdatePlayerDetails = async (req, res) => {
     try {
       let playerId = parseInt(req.params.id);
-      let updatedPlayer = await players.update(req.body, {
+      let updatedPlayer = await Player.update(req.body, {
         where: { id: playerId },
         returning: true
       });
@@ -58,6 +85,7 @@ module.exports = {
     CreatePlayer,
     GetPlayerById,
     UpdatePlayerDetails,
-    DeletePlayer
+    DeletePlayer,
+    getAllPlayersWithScorecards
 
 }

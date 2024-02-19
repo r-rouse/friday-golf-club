@@ -1,16 +1,21 @@
-// models/score.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Assuming you have a database configuration file
-const Scorecard = require('./scorecard');
-const Hole = require('./hole');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const Score = sequelize.define('Score', {
-    strokes: {
-        type: DataTypes.INTEGER
-    }
+module.exports = (sequelize) => {
+class Score extends Model {}
+
+Score.init({
+  // Model attributes are defined here
+  strokes: {
+    type: DataTypes.INTEGER,
+    allowNull: false, // Consider adding constraints like allowNull based on your requirements
+  },
+}, {
+  sequelize, // Pass the connection instance
+  modelName: 'Score', // Specify the model name
+  tableName: 'scores' // Explicitly set the table name if it doesn't follow Sequelize's naming convention
 });
 
-Score.belongsTo(Scorecard);
-Score.belongsTo(Hole);
+return Score;
 
-module.exports = Score;
+}

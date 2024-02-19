@@ -16,7 +16,7 @@ module.exports = {
       courseId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Courses', // Update to match the table name in the database (capitalized)
+          model: 'courses', // Update to match the table name in the database (capitalized)
           key: 'id',
         },
         onUpdate: 'CASCADE',

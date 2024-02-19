@@ -8,6 +8,7 @@ Router.get('/test', (req, res) => {
   });
   
 Router.get('/', controller.GetAllPlayer);
+Router.get('/scores', controller.getAllPlayersWithScorecards);
 Router.get('/:id', controller.GetPlayerById);
 Router.put('/:id', controller.UpdatePlayerDetails);
 Router.delete('/:id', controller.DeletePlayer);

@@ -1,18 +1,28 @@
 // models/course.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Assuming you have a database configuration file
+const { Model, DataTypes } = require('sequelize');
 
-const Course = sequelize.define('Course', {
+module.exports = (sequelize) => {
+  class Course extends Model {}
+
+  Course.init({
+    // Model attributes are defined here
     name: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false
     },
     location: {
-        type: DataTypes.STRING
+      type: DataTypes.STRING
     },
     par: {
-        type: DataTypes.INTEGER
+      type: DataTypes.INTEGER
     }
-});
+  }, {
+    // Other model options go here
+    sequelize, // We need to pass the connection instance
+    modelName: 'Course' // We need to choose the model name
+  });
 
-module.exports = Course;
+  return Course;
+};
+
+

@@ -1,19 +1,26 @@
-// models/scorecard.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Assuming you have a database configuration file
-const Player = require('./player');
-const Course = require('./course');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const Scorecard = sequelize.define('Scorecard', {
-    date_played: {
-        type: DataTypes.DATE
-    },
-    total_score: {
-        type: DataTypes.INTEGER
-    }
-});
+module.exports = (sequelize) => {
+    class Scorecard extends Model { }
 
-Scorecard.belongsTo(Player);
-Scorecard.belongsTo(Course);
+    Scorecard.init({
+        // Model attributes are defined here
+        date_played: {
+            type: DataTypes.DATE,
+            allowNull: false, // Assuming you want the date to be required
+        },
+        total_score: {
+            type: DataTypes.INTEGER,
+            allowNull: false, // Assuming you want the total score to be required
+        },
+    }, {
+        sequelize, // Pass the connection instance
+        modelName: 'Scorecard', // Specify the model name
+        tableName: 'scorecards' // Explicitly set the table name if it doesn't follow Sequelize's naming convention
+    });
 
-module.exports = Scorecard;
+
+    return Scorecard;
+
+}
