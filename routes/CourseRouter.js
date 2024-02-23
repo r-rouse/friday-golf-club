@@ -8,6 +8,8 @@ Router.get('/test', (req, res) => {
   });
   
 Router.get('/', controller.GetAllCourse);
+Router.get('/:id', controller.getCourseById);
+Router.get('/:id/holes', controller.getHolesByCourseId);
 Router.post('/', controller.CreateCourse);
 Router.delete('/', controller.deleteAllCourses);
 

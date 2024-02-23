@@ -36,10 +36,44 @@ const getAllPlayersWithScorecards = async (req, res) => {
       res.status(500).send({ message: error.message });
     }
   };
+
+const getPlayerScorecards = async (req, res) => {
+    let playerId = parseInt(req.params.id);
+
+    try {
+      const player = await Player.findByPk(playerId, {
+        include: [{
+          model: ScoreCard,
+          as: 'scorecards', // Ensure this matches the alias used in your association definition
+          include: [{
+            model: Course, // Optional: Include Course if Scorecard belongs to a Course
+            as: 'course', // Again, ensure this matches the alias used in your association definition
+          }, {
+            model: Score, // Optional: Include Scores if detailed scores per hole are needed
+            as: 'scores', // Alias used in association definition
+            include: [{
+              model: Hole, // Optional: Include Hole details for each Score
+              as: 'hole', // Alias used in association definition
+            }]
+          }]
+        }]
+      });
+
+      if (!player) {
+        return res.status(404).send({ message: 'Player not found.' });
+      }
+
+      res.status(200).json(player);
+    } catch (error) {
+      console.error('Error fetching scorecards for player:', error);
+      res.status(500).send({ message: error.message });
+    }
+};
+
 const GetPlayerById = async (req, res) => {
     try {
       let playerId = parseInt(req.params.id);
-      const player = await players.findOne({
+      const player = await Player.findOne({
         where: { id: playerId }
       });
       res.send(player);
@@ -86,6 +120,7 @@ module.exports = {
     GetPlayerById,
     UpdatePlayerDetails,
     DeletePlayer,
-    getAllPlayersWithScorecards
+    getAllPlayersWithScorecards,
+    getPlayerScorecards
 
 }
